@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa Hàng - Shop System</title>
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="shop-header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="Logo" class="logo-img" style="height: 100px; width: auto;">
+                <h2>Ẩm Thực <span>3 Miền</span></h2>
+            </a>  
+            
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." onkeyup="filterProducts()">
+            </div>
+
+            <div class="header-actions">
+                <button class="btn-theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Đổi giao diện">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="cart-icon-wrapper" onclick="toggleWishlistDrawer()" title="Xem danh sách yêu thích">
+                    <span class="cart-icon"><i class="fa-solid fa-heart" style="color: #e74c3c;"></i></span>
+                    <span id="wishlist-count" class="cart-badge">0</span>
+                </div>
+                <div class="cart-icon-wrapper" onclick="toggleCartDrawer()" title="Xem giỏ hàng">
+                    <span class="cart-icon"><img src="shopping-cart.svg" alt="Giỏ Hàng" width="24" height="24"></span>
+                    <span id="cart-count" class="cart-badge">0</span>
+                </div>
+                <a href="account.html" class="btn-user">Tài Khoản</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-body">
+        <!-- Flash Sale Banner -->
+        <section class="flash-sale-banner">
+            <div class="flash-sale-title">
+                <i class="fa-solid fa-bolt"></i> GIỜ VÀNG ƯU ĐÃI - GIẢM NỬA GIÁ COMBO 3 MIỀN!
+            </div>
+            <div class="countdown-timer">
+                <span>Kết thúc sau: </span>
+                <span id="timer-hours" class="timer-unit">02</span>:
+                <span id="timer-minutes" class="timer-unit">45</span>:
+                <span id="timer-seconds" class="timer-unit">18</span>
+            </div>
+        </section>
+
+        <!-- Banner Cửa Hàng -->
+        <section class="hero">
+            <div class="hero__content">
+                <h1>Đặc Sản 3 Miền - Cửa Hàng Món Ăn</h1>
+                <p>Thưởng thức trọn vẹn hương vị truyền thống quê hương chuẩn vị ngay tại nhà bạn.</p>
+                <a href="#dishes" class="btn btn--primary">Đặt Món Ngay</a>
+            </div>
+        </section>
+
+        <!-- Danh Mục Lọc Vùng Miền -->
+        <section class="section categories-section" id="categories-section">
+            <div class="container">
+                <h2 class="section-title">Khám Phá Danh Mục Món Ăn</h2>
+                <div class="category-grid">
+                    <!-- Tất cả món -->
+                    <div class="category-card" onclick="filterByCategory('all', this)">
+                        <i class="fa-solid fa-utensils" aria-hidden="true"></i>
+                        <h3>Tất Cả Món</h3>
+                        <p>Trọn bộ ẩm thực đặc sắc 3 miền.</p>
+                    </div>
+
+                    <!-- Miền Bắc -->
+                    <div class="category-card" onclick="filterByCategory('Miền Bắc', this)">
+                        <i class="fa-solid fa-bowl-food" aria-hidden="true"></i>
+                        <h3>Đặc sản Miền Bắc</h3>
+                        <p>Thanh nhã, đậm đà vị truyền thống lâu đời.</p>
+                    </div>
+
+                    <!-- Miền Trung -->
+                    <div class="category-card" onclick="filterByCategory('Miền Trung', this)">
+                        <i class="fa-solid fa-pepper-hot" aria-hidden="true"></i>
+                        <h3>Đặc sản Miền Trung</h3>
+                        <p>Đậm đà, cay nồng mang đặc trưng xứ biển.</p>
+                    </div>
+
+                    <!-- Miền Nam -->
+                    <div class="category-card" onclick="filterByCategory('Miền Nam', this)">
+                        <i class="fa-solid fa-cloud-sun" aria-hidden="true"></i>
+                        <h3>Đặc sản Miền Nam</h3>
+                        <p>Phóng khoáng, ngọt ngào và phong phú sản vật.</p>
+                    </div>
+
+                    <!-- Đồ uống -->
+                    <div class="category-card" onclick="filterByCategory('Đồ Uống', this)">
+                        <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
+                        <h3>Đồ uống</h3>
+                        <p>Thanh mát, giải nhiệt và trọn vị bữa ăn.</p>
+                    </div>
+
+                    <!-- Combo -->
+                    <div class="category-card" onclick="filterByCategory('Combo', this)">
+                        <i class="fa-solid fa-gift" aria-hidden="true"></i>
+                        <h3>Combo Tiết Kiệm</h3>
+                        <p>Đầy đủ hương vị với mức giá ưu đãi nhất.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lưới Hiển Thị Sản Phẩm Cửa Hàng -->
+        <section class="section dishes-section" id="dishes">
+            <div class="container">
+                <div class="section-header-flex">
+                    <h2 class="section-title">Thực Đơn Đầy Đủ</h2>
+                    <div class="rating-summary">
+                        <span><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8/5.0 Đánh giá chất lượng</span>
+                    </div>
+                </div>
+
+                <!-- BỘ LỌC VÀ SẮP XẾP SẢN PHẨM MỚI BỔ SUNG -->
+                <div class="filter-controls-bar">
+                    <div class="filter-group">
+                        <label for="price-range-filter"><i class="fa-solid fa-filter"></i> Lọc theo giá:</label>
+                        <select id="price-range-filter" class="filter-select" onchange="applyFilters()">
+                            <option value="all">Tất cả mức giá</option>
+                            <option value="under-50">Dưới 50.000 đ</option>
+                            <option value="50-100">50.000 đ - 100.000 đ</option>
+                            <option value="above-100">Trên 100.000 đ</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sort-filter"><i class="fa-solid fa-sort"></i> Sắp xếp:</label>
+                        <select id="sort-filter" class="filter-select" onchange="applyFilters()">
+                            <option value="default">Mặc định</option>
+                            <option value="price-asc">Giá: Thấp đến Cao</option>
+                            <option value="price-desc">Giá: Cao đến Thấp</option>
+                            <option value="rating-desc">Đánh giá cao nhất</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Container chứa sản phẩm render tự động -->
+                <div id="product-grid" class="dish-grid"></div>
+            </div>
+        </section>   
+    </main>
+
+    <!-- Drawer Giỏ Hàng Nhanh (Cart Drawer) -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="drawer-header">
+            <h3>Giỏ Hàng Của Bạn</h3>
+            <button class="btn-close" onclick="toggleCartDrawer()">✕</button>
+        </div>
+
+        <div id="cart-items-container" class="drawer-body">
+            <!-- Danh sách món hàng trong giỏ -->
+        </div>
+
+        <div class="drawer-footer">
+            <!-- BỔ SUNG VOUCHER -->
+            <div class="voucher-section">
+                <input type="text" id="voucher-code-input" placeholder="Mã giảm giá (ví dụ: DISCOUNT10)">
+                <button id="btn-voucher" onclick="applyVoucher()">Áp dụng</button>
+            </div>
+            <div class="total-price-box">
+                <span>Giảm giá:</span>
+                <span id="cart-discount-amount">0 đ</span>
+            </div>
+            <div class="total-price-box">
+                <span>Tổng tiền:</span>
+                <strong id="cart-total-price">0 đ</strong>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">Thanh Toán</button>
+        </div>
+    </div>
+
+    <!-- Drawer Danh Sách Yêu Thích (Wishlist Drawer) -->
+    <div id="wishlist-drawer" class="cart-drawer">
+        <div class="drawer-header">
+            <h3>Món Ăn Yêu Thích</h3>
+            <button class="btn-close" onclick="toggleWishlistDrawer()">✕</button>
+        </div>
+
+        <div id="wishlist-items-container" class="drawer-body">
+            <!-- Danh sách món yêu thích -->
+        </div>
+    </div>
+
+    <div id="cart-overlay" class="cart-overlay" onclick="closeAllDrawers()"></div>
+
+    <!-- CỬA SỔ XEM NHANH SẢN PHẨM (QUICK VIEW MODAL) -->
+    <div id="quickview-modal" class="modal-overlay" onclick="closeQuickView(event)">
+        <div class="quickview-modal">
+            <button class="btn-close" onclick="closeQuickViewModal()" style="position: absolute; top: 15px; right: 15px;">✕</button>
+            <div id="quickview-content"></div>
+        </div>
+    </div>
+
+    <!-- NÚT CUỘN LÊN ĐẦU TRANG -->
+    <button id="btn-back-to-top" class="btn-back-to-top" onclick="scrollToTop()" title="Lên đầu trang">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Thông báo Toast khi thêm giỏ hàng thành công -->
+    <div id="toast" class="toast-notification">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-msg">Đã thêm sản phẩm vào giỏ hàng!</span>
+    </div>
+
+    <!-- Phần Lý Do Chọn Chúng Tôi (Features) -->
+    <section class="section">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-box">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <h4>Giao Hàng Siêu Tốc</h4>
+                    <p>Nhận món ngon nóng hổi tận nhà chỉ trong vòng 30 phút.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-seedling"></i>
+                    <h4>100% Chuẩn Vị Quê Hương</h4>
+                    <p>Nguyên liệu tươi sạch, chọn lọc kỹ lưỡng từ khắp 3 miền.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h4>Đảm Bảo Vệ Sinh</h4>
+                    <p>Quy trình chế biến an toàn tuyệt đối, đạt chuẩn chất lượng.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-headset"></i>
+                    <h4>Hỗ Trợ 24/7</h4>
+                    <p>Luôn sẵn sàng lắng nghe và giải đáp mọi thắc mắc của bạn.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="lien-he">
+        <div class="container footer__container">
+            <div class="footer__col">
+                <div class="footer__brand">
+                    <img src="logo.png" alt="Logo" class="footer__logo">
+                    <div class="footer__title">Ẩm Thực <span>3 Miền</span></div>
+                </div>
+                <p class="footer__desc">Hệ thống phân phối đặc sản ẩm thực 3 miền uy tín hàng đầu Việt Nam.</p>
+            </div>
+            <div class="footer__col">
+                <div class="footer__info">
+                    <h4>Thông tin liên hệ</h4>
+                    <p><i class="fa-solid fa-envelope"></i> sieucapamthucVN@amthucvn.com</p>
+                    <p><i class="fa-solid fa-phone"></i> +84 363 636 363</p>
+                    <p><i class="fa-solid fa-headset"></i> <strong>Hotline 24/7:</strong> <a href="tel:19001234">1900 1234</a></p>
+                    <div class="back-home">
+                        <a href="teammembers.html" class="btn-home"> Đội ngũ thành viên</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <p>&copy; 2026 Ẩm Thực Việt Nam. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- File JavaScript chính của trang -->
+    <script src="js/shop.js"></script>
+</body>
+</html>

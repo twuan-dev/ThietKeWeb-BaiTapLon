@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Trị Nhà Hàng - Admin Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <div class="brand-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div>
+                <span class="brand">Nhà Hàng Việt Admin</span>
+                <span class="sub">Hệ thống quản lý chuyên nghiệp</span>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="user-info">
+                <img src="https://i.pinimg.com/736x/75/2d/da/752dda6a91d32f4dba8cf1dc87c2dafa.jpg" alt="Admin">
+                <span>Quản Trị Viên</span>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()" title="Đăng xuất hệ thống">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="menu-group">
+                <h3>Menu Quản Lý</h3>
+                <ul>
+                    <li class="active" onclick="switchTab('products', this)"><i class="fa-solid fa-bowl-food"></i> Thực đơn & Món ăn</li>
+                    <li onclick="switchTab('online-orders', this)"><i class="fa-solid fa-cart-shopping"></i> Đơn hàng Online</li>
+                    <li onclick="switchTab('users', this)"><i class="fa-solid fa-users-gear"></i> Tài khoản & Nhân sự</li>
+                    <li onclick="switchTab('report', this); initRevenueReport();"><i class="fa-solid fa-chart-pie"></i> Báo cáo doanh thu</li>
+                </ul>
+            </div>
+
+            <div class="menu-group">
+                <h3>Hệ Thống</h3>
+                <ul>
+                    <li onclick="refreshSystemData()" style="cursor: pointer;">
+                        <i class="fa-solid fa-rotate"></i> Reset Dữ Liệu
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div id="tab-products" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="metric-card orange">
+                        <div class="icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                        <div class="info">
+                            <span class="label">Tổng Doanh Thu</span>
+                            <h2 id="total-revenue">0 đ</h2>
+                            <small>Tính trên số món đã bán</small>
+                        </div>
+                    </div>
+
+                    <div class="metric-card yellow">
+                        <div class="icon"><i class="fa-solid fa-bowl-food"></i></div>
+                        <div class="info">
+                            <span class="label">Tổng Món Ăn</span>
+                            <h2 id="total-dishes">0</h2>
+                            <small>Món đang kinh doanh</small>
+                        </div>
+                    </div>
+
+                    <div class="metric-card green">
+                        <div class="icon"><i class="fa-solid fa-fire"></i></div>
+                        <div class="info">
+                            <span class="label">Món Bán Chạy Nhất</span>
+                            <h3 id="best-seller">--</h3>
+                            <small id="best-seller-count">Đã bán: 0 phần</small>
+                        </div>
+                    </div>
+
+                    <div class="metric-card red">
+                        <div class="icon"><i class="fa-solid fa-snowflake"></i></div>
+                        <div class="info">
+                            <span class="label">Món Bán Ít Nhất</span>
+                            <h3 id="least-seller">--</h3>
+                            <small id="least-seller-count">Đã bán: 0 phần</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 28px;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-utensils"></i> Quản Lý Thực Đơn & Trạng Thái Phục Vụ</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>Tên Món</th>
+                                    <th>Giá Tiền</th>
+                                    <th>Đã Bán</th>
+                                    <th>Trạng Thái Phục Vụ</th>
+                                    <th>Nhãn Hiển Thị</th>
+                                    <th>Doanh Thu Tạm Tính</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-online-orders" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-cart-shopping"></i> Danh Sách Đơn Hàng Trực Tuyến</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Món Ăn</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="online-order-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-users" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản Người Dùng</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ Tên</th>
+                                    <th>Email</th>
+                                    <th>Username</th>
+                                    <th>Vai Trò</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-report" class="tab-content" style="display: none;">
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-pie"></i> Báo Cáo Tổng Quan Hệ Thống</h2>
+                    </div>
+                    <ul id="report-summary" style="list-style: none; display: flex; flex-direction: column; gap: 14px; padding: 0;"></ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <h2><i class="fa-solid fa-chart-line"></i> Biểu Đồ & Chi Tiết Doanh Thu</h2>
+                        <div class="chart-controls" style="display: flex; gap: 8px;">
+                            <button class="btn-time-filter active" onclick="switchTimeFrame('day', event)">Theo Ngày</button>
+                            <button class="btn-time-filter" onclick="switchTimeFrame('week', event)">Theo Tuần</button>
+                            <button class="btn-time-filter" onclick="switchTimeFrame('month', event)">Theo Tháng</button>
+                            <button class="btn-time-filter" onclick="switchTimeFrame('year', event)">Theo Năm</button>
+                        </div>
+                    </div>
+
+                    <div style="padding: 20px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                            <div style="background: rgba(30, 41, 59, 0.5); padding: 15px; border-radius: 8px; border: 1px solid var(--border-glass, #334155);">
+                                <span style="color: #94a3b8; font-size: 0.9rem;">Tổng Doanh Thu Kỳ Này</span>
+                                <p id="report-revenue-val" style="font-size: 1.5rem; font-weight: bold; color: #e67e22; margin-top: 5px;">0 đ</p>
+                            </div>
+                            <div style="background: rgba(30, 41, 59, 0.5); padding: 15px; border-radius: 8px; border: 1px solid var(--border-glass, #334155);">
+                                <span style="color: #94a3b8; font-size: 0.9rem;">Sản Phẩm Bán Được Kỳ Này</span>
+                                <p id="report-items-val" style="font-size: 1.5rem; font-weight: bold; color: #27ae60; margin-top: 5px;">0 suất</p>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 8px; border: 1px solid var(--border-glass, #334155); margin-bottom: 30px; height: 320px;">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+
+                        <h3 style="margin-bottom: 15px; font-size: 1.1rem;"><i class="fa-solid fa-utensils"></i> Món Ăn Bán Được Trong Khoảng Thời Gian Này</h3>
+                        <div class="table-responsive">
+                            <table class="stock-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tên Món Ăn</th>
+                                        <th>Số Lượng Bán</th>
+                                        <th>Doanh Thu Đóng Góp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-sold-products-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="edit-product-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: #1e1e2d; padding: 25px; border-radius: 12px; width: 420px; color: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #333;">
+            <h3 style="margin-bottom: 20px; font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-pen-to-square" style="color: #e67e22;"></i> Chỉnh Sửa Thông Tin Món Ăn
+            </h3>
+            
+            <input type="hidden" id="edit-product-id">
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: #ccc;">Tên món:</label>
+                <input type="text" id="edit-name" style="width: 100%; padding: 10px 12px; background: #2a2a3c; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: #ccc;">Giá tiền (VNĐ):</label>
+                <input type="number" id="edit-price" style="width: 100%; padding: 10px 12px; background: #2a2a3c; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: #ccc;">Vùng miền / Danh mục:</label>
+                <input type="text" id="edit-region" style="width: 100%; padding: 10px 12px; background: #2a2a3c; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: #ccc;">Số lượng dự tính bán:</label>
+                <input type="number" id="edit-stock" style="width: 100%; padding: 10px 12px; background: #2a2a3c; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none;">
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" onclick="closeEditModal()" style="padding: 9px 18px; background: #444; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Hủy</button>
+                <button type="button" onclick="saveProductChanges()" style="padding: 9px 18px; background: #e67e22; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

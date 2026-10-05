@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Tài Khoản</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <h1>Đăng Ký Tài Khoản</h1>
+            
+            <form id="registerForm">
+                <!-- Nhập Tên Đầy Đủ -->
+                <div class="form-group">
+                    <label for="fullName">Tên Đầy Đủ:</label>
+                    <input type="text" id="fullName" placeholder="VD: Nguyễn Văn A" required>
+                </div>
+
+                <!-- Nhập Email (với @gmail.com mặc định) -->
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <div class="email-input-group">
+                        <input type="text" id="email" placeholder="Nhập email" required>
+                        <span class="email-suffix">@gmail.com</span>
+                    </div>
+                </div>
+
+                <!-- Nhập Username -->
+                <div class="form-group">
+                    <label for="username">Tên Đăng Nhập:</label>
+                    <input type="text" id="username" placeholder="VD: nguyenvana" required>
+                </div>
+
+                <!-- Nhập Mật Khẩu -->
+                <div class="form-group">
+                    <label for="password">Mật Khẩu:</label>
+                    <div class="password-input-group">
+                        <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                        <span class="password-toggle" onclick="togglePassword('password')">
+                            <img src="eye-crossed.svg" alt="Ẩn mật khẩu" width="24" height="24">
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Nhập Lại Mật Khẩu -->
+                <div class="form-group">
+                    <label for="confirmPassword">Xác Nhận Mật Khẩu:</label>
+                    <div class="password-input-group">
+                        <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                        <span class="password-toggle" onclick="togglePassword('confirmPassword')">
+                            <img src="eye-crossed.svg" alt="Ẩn mật khẩu" width="24" height="24">
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Nút Đăng Ký -->
+                <button type="submit" class="btn btn-primary">Đăng Ký</button>
+            </form>
+
+            <!-- Khung hiển thị thông báo -->
+            <div id="message" class="message" style="display: none;"></div>
+
+            <!-- Link đến trang đăng nhập -->
+            <p class="login-link">
+                Đã có tài khoản? <a href="login.html">Đăng Nhập Tại Đây</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

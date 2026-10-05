@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - Ẩm Thực 3 Miền</title>
+    <!-- Link Font Awesome cho icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sử dụng chung stylesheet gốc và file CSS riêng cho trang checkout -->
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/thanhtoan.css">
+</head>
+<body>
+
+    <!-- HEADER / NAVBAR -->
+    <header class="shop-header">
+        <div class="header-container">
+            <a href="shop.html" class="logo">
+                <!-- Đã chỉnh sửa kích thước logo nhỏ gọn lại (ví dụ: 35px) -->
+                <img src="logo.png" alt="Logo" class="logo-img" style="height: 35px; width: auto;">
+                <h2>Ẩm Thực <span>3 Miền</span></h2>
+            </a>
+            <div class="header-actions">
+                <a href="shop.html" class="btn-user"><i class="fa-solid fa-arrow-left"></i> Tiếp tục mua sắm</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG THANH TOÁN -->
+    <main class="checkout-container">
+        <!-- Cột trái: Thông tin giao hàng & Thanh toán -->
+        <div class="checkout-box">
+            <h3><i class="fa-solid fa-user-shield"></i> Thông tin nhận hàng</h3>
+            <form id="checkoutForm">
+                <div class="form-group">
+                    <label for="fullname">Họ và tên người nhận</label>
+                    <input type="text" id="fullname" class="form-control" placeholder="Nhập họ và tên của bạn..." required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Số điện thoại liên hệ</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Nhập số điện thoại..." required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Địa chỉ nhận hàng chi tiết</label>
+                    <input type="text" id="address" class="form-control" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." required>
+                </div>
+                <div class="form-group">
+                    <label for="note">Ghi chú cho đơn hàng (tùy chọn)</label>
+                    <textarea id="note" class="form-control" rows="3" placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi tới..."></textarea>
+                </div>
+
+                <h3 style="margin-top: 2rem;"><i class="fa-solid fa-credit-card"></i> Phương thức thanh toán</h3>
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="cod" checked>
+                        <span>Thanh toán khi nhận hàng (COD)</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="banking">
+                        <span>Chuyển khoản qua Ngân hàng / QR Code</span>
+                    </label>
+                </div>
+
+                <!-- Khu vực hiển thị mã QR nếu chọn chuyển khoản (tùy chọn mở rộng) -->
+                <div id="qr-code-box" style="text-align: center; margin-top: 15px; display: none;">
+                    <p style="font-weight: bold; color: var(--secondary-color);">Quét mã QR để thanh toán:</p>
+                    <img id="qr-code-img" src="" alt="QR Code" style="max-width: 200px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+
+                <button type="submit" class="btn-place-order">XÁC NHẬN ĐẶT HÀNG</button>
+            </form>
+        </div>
+
+        <!-- Cột phải: Tóm tắt đơn hàng (Đã liên kết để lấy dữ liệu động từ giỏ hàng) -->
+        <div class="checkout-box" style="height: fit-content;">
+            <h3><i class="fa-solid fa-receipt"></i> Đơn hàng của bạn</h3>
+            
+            <!-- Danh sách sản phẩm sẽ được tự động đổ vào đây từ JS -->
+            <div id="checkout-items-list" style="margin-bottom: 1rem;">
+                <!-- Dữ liệu động sẽ thay thế chỗ này -->
+            </div>
+            
+            <!-- Voucher -->
+            <div class="voucher-box">
+                <div class="voucher-input">
+                    <input type="text" id="voucher-code" class="form-control" placeholder="Nhập mã voucher...">
+                    <button type="button" id="btn-apply-voucher" class="btn-voucher">Áp dụng</button>
+                </div>
+                <p id="voucher-message" class="voucher-message"></p>
+                <p class="voucher-hint">Mã có sẵn: <strong>DISCOUNT10</strong> (giảm 10%), <strong>FREESHIP</strong> (miễn phí vận chuyển)</p>
+            </div>
+
+            <div class="order-summary-item" style="border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+                <span>Tạm tính</span>
+                <span id="checkout-subtotal">0 đ</span>
+            </div>
+            <div class="order-summary-item" id="discount-row" style="display: none;">
+                <span>Giảm giá (voucher)</span>
+                <span id="checkout-discount">0 đ</span>
+            </div>
+            <div class="order-summary-item">
+                <span>Phí vận chuyển</span>
+                <span id="checkout-shipping">Miễn Phí</span>
+            </div>
+
+            <div class="order-total">
+                <span>Tổng cộng</span>
+                <span id="checkout-total">0 đ</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal/Panel xác nhận lại đơn hàng trước khi gửi -->
+        <div id="confirm-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+            <div style="background: #fff; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px;">Xác Nhận Lại Thông Tin Đơn Hàng</h3>
+        
+                <div style="margin: 15px 0; font-size: 14px; color: #444; line-height: 1.6;">
+                    <p><strong>Họ tên:</strong> <span id="review-name"></span></p>
+                    <p><strong>Số điện thoại:</strong> <span id="review-phone"></span></p>
+                    <p><strong>Địa chỉ:</strong> <span id="review-address"></span></p>
+                    <p><strong>Ghi chú:</strong> <span id="review-note"></span></p>
+                    <p><strong>Hình thức thanh toán:</strong> <span id="review-payment"></span></p>
+                    <p><strong>Tổng tiền thanh toán:</strong> <span id="review-total" style="color: #d9534f; font-weight: bold;"></span></p>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
+                    <button type="button" id="btn-cancel-order" style="padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Hủy Mua</button>
+                    <button type="button" id="btn-edit-info" style="padding: 8px 16px; background: #f0ad4e; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Sửa Lại</button>
+                    <button type="button" id="btn-confirm-final" style="padding: 8px 16px; background: #5cb85c; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Xác Nhận Đặt</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__brand">
+                <img src="logo.png" alt="Logo" class="footer__logo" style="height: 30px; width: auto;">
+                <h3 class="footer__title">Ẩm Thực <span>3 Miền</span></h3>
+            </div>
+            <div class="footer__info">
+                <h4>Hỗ trợ khách hàng</h4>
+                <p>Hotline: 1900 xxxx</p>
+                <p>Email: support@amthuc3mien.vn</p>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <p>&copy; 2026 Ẩm Thực 3 Miền. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Link file JavaScript xử lý trang thanh toán (thanhtoan.js) -->
+    <script src="js/thanhtoan.js"></script>
+</body>
+</html>

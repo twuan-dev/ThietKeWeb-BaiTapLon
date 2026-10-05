@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập Tài Khoản</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <h1>Đăng Nhập</h1>
+            
+            <!-- Chọn loại đăng nhập -->
+            <div class="login-type-selector">
+                <p class="selector-label">Chọn loại tài khoản:</p>
+                <div class="selector-buttons">
+                    <button type="button" class="btn-type active" data-type="user" onclick="selectLoginType('user')">
+                        👤 Đăng Nhập User
+                    </button>
+                    <button type="button" class="btn-type" data-type="admin" onclick="selectLoginType('admin')">
+                        🔐 Đăng Nhập Admin
+                    </button>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <!-- Nhập Username -->
+                <div class="form-group">
+                    <label for="username">Tên Đăng Nhập:</label>
+                    <input type="text" id="username" placeholder="Nhập tên đăng nhập hoặc email" required>
+                </div>
+
+                <!-- Nhập Mật Khẩu -->
+                <div class="form-group">
+                    <label for="password">Mật Khẩu:</label>
+                    <div class="password-input-group">
+                        <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                        <span class="password-toggle" onclick="togglePassword('password')">
+                            <img src="eye-crossed.svg" alt="Ẩn mật khẩu" width="24" height="24">
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Nút Đăng Nhập -->
+                <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+            </form>
+
+            <!-- Khung hiển thị thông báo -->
+            <div id="message" class="message" style="display: none;"></div>
+
+            <!-- Link đến trang đăng ký -->
+            <p class="register-link">
+                Chưa có tài khoản? <a href="register.html">Đăng Ký Tại Đây</a>
+            </p>
+
+            <div class="demo-account" id="demoAccountUser">
+                <h3>📌 Lưu Ý:</h3>
+                <p>Bạn cần có tài khoản User đã đăng ký để đăng nhập</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

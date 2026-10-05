@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài Khoản Của Tôi - Quản Lý Hệ Thống</title>
+    <link rel="stylesheet" href="css/account.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="account-container">
+        <!-- Sidebar Navigation -->
+        <aside class="account-sidebar">
+            <!-- Nút quay lại cửa hàng -->
+            <a href="shop.html" class="btn-back-shop">
+                <i class="ri-arrow-left-line"></i> Quay lại Cửa Hàng
+            </a>
+
+            <!-- Khung thông tin người dùng thu nhỏ -->
+            <div class="user-profile-mini">
+                <div class="avatar"><img src="user.svg" alt="Avatar" width="24" height="24"></div>
+                <div>
+                    <h3 id="usernameMini">Khách Hàng</h3>
+                    <p style="font-size: 11px; color: #4A4A4A; margin: 2px 0 0 0;">Thành viên thân thiết</p>
+                </div>
+            </div>
+
+            <!-- Menu chính -->
+            <div class="account-menu">
+                <div class="menu-label">Trang Quản Lý</div>
+                <button class="menu-item active" onclick="switchTab('info', this)">
+                    <i class="ri-user-3-line"></i> Thông Tin Cá Nhân
+                </button>
+                <button class="menu-item" onclick="switchTab('address', this)">
+                    <i class="ri-map-pin-line"></i> Địa Chỉ Giao Hàng
+                </button>
+                <button class="menu-item" onclick="switchTab('orders', this)">
+                    <i class="ri-shopping-bag-3-line"></i> Lịch Sử Mua Hàng
+                </button>
+                <button class="menu-item" onclick="switchTab('wishlist', this)">
+                    <i class="ri-heart-3-line"></i> Sản Phẩm Yêu Thích
+                </button>
+                <div class="menu-label" style="margin-top: 15px;">Hệ Thống</div>
+                <button class="menu-item" onclick="switchTab('security', this)">
+                    <i class="ri-shield-user-line"></i> Bảo Mật & Mật Khẩu
+                </button>
+                <button class="menu-item" onclick="switchTab('settings', this)">
+                    <i class="ri-settings-4-line"></i> Cài Đặt Hệ Thống
+                </button>
+                <button class="menu-item logout-btn" onclick="logout()">
+                    <i class="ri-logout-box-r-line"></i> Đăng Xuất
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="account-main">
+            <!-- 1. Thông Tin Cá Nhân -->
+            <section id="info-tab" class="account-tab active">
+                <h2><img src="user.svg" alt="Avatar" width="32" height="32"> Thông Tin Cá Nhân</h2>
+                <div class="info-card">
+                    <div class="info-row">
+                        <label>Tên Đầy Đủ:</label>
+                        <span id="infoFullName">-</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Username:</label>
+                        <span id="infoUsername">-</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Email:</label>
+                        <span id="infoEmail">-</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Ngày Tạo Tài Khoản:</label>
+                        <span id="infoCreatedAt">-</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="toggleEditInfo()"><img src="pencil.svg" alt="Edit" width="16" height="16"> Chỉnh Sửa Thông Tin</button>
+
+                <!-- Form chỉnh sửa (ẩn ban đầu) -->
+                <div id="editInfoForm" class="edit-form" style="display: none;">
+                    <h3>Chỉnh Sửa Thông Tin</h3>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Tên Đầy Đủ:</label>
+                        <input type="text" id="editFullName" placeholder="Nhập tên đầy đủ">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Email:</label>
+                        <input type="email" id="editEmail" placeholder="Nhập email">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveUserInfo()"><img src="disk.svg" alt="Địa chỉ giao hàng" width="16" height="16"> Lưu Thay Đổi</button>
+                    <button class="btn btn-secondary" onclick="toggleEditInfo()"><img src="cross-circle.svg" alt="Hủy" width="16" height="16"> Hủy</button>
+                </div>
+            </section>
+
+            <!-- 2. Địa Chỉ Giao Hàng (Đã cải thiện giao diện chia khung card cho từng địa chỉ) -->
+            <section id="address-tab" class="account-tab">
+                <h2><img src="map-marker-home.svg" alt="Địa chỉ giao hàng" width="32" height="32"> Địa Chỉ Giao Hàng</h2>
+                
+                <!-- Khung card chứa danh sách địa chỉ đã được phân chia khu vực rõ ràng -->
+                <div class="info-card" style="padding: 24px;">
+                    <div id="addressList" class="address-list"></div>
+                    
+                    <button class="btn btn-primary" onclick="toggleAddAddressForm()" style="margin-top: 20px;">
+                        <i class="ri-add-line"></i> Thêm Địa Chỉ Mới
+                    </button>
+                </div>
+
+                <!-- Form thêm địa chỉ nâng cấp vùng miền -->
+                <div id="addAddressForm" class="edit-form" style="display: none; margin-top: 20px;">
+                    <h3>Thêm Địa Chỉ Mới</h3>
+                    
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Tên Gợi Nhớ Địa Chỉ:</label>
+                        <input type="text" id="addressName" placeholder="VD: Nhà riêng, Văn phòng">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Vùng Miền:</label>
+                        <select id="selectRegion" class="form-control" onchange="onRegionChange()">
+                            <option value="">-- Chọn Vùng Miền --</option>
+                            <option value="Miền Bắc">Miền Bắc</option>
+                            <option value="Miền Trung">Miền Trung</option>
+                            <option value="Miền Nam">Miền Nam</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Tỉnh / Thành Phố:</label>
+                        <select id="selectProvince" class="form-control" onchange="onProvinceChange()" disabled>
+                            <option value="">-- Chọn Tỉnh / Thành Phố trước --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Số Nhà, Tên Đường / Phường / Xã:</label>
+                        <input type="text" id="addressDetail" placeholder="VD: 123 Nguyễn Huệ, Phường Bến Nghé">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Số Điện Thoại Nhận Hàng:</label>
+                        <input type="tel" id="addressPhone" placeholder="VD: 0912345678">
+                    </div>
+
+                    <div class="form-group" style="margin: 15px 0;">
+                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="addressDefault">
+                            <span>Đặt làm địa chỉ mặc định</span>
+                        </label>
+                    </div>
+
+                    <div class="form-actions" style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="addAddressStructured()"><img src="disk.svg" alt="Địa chỉ giao hàng" width="16" height="16"> Lưu Địa Chỉ</button>
+                        <button class="btn btn-secondary" onclick="toggleAddAddressForm()"><img src="cross-circle.svg" alt="Hủy" width="16" height="16"> Hủy</button>
+                    </div> 
+                </div>
+            </section>
+
+            <!-- 3. Lịch Sử Mua Hàng -->
+            <section id="orders-tab" class="account-tab">
+                <h2><img src="box-open.svg" alt="Hàng mua" width="32" height="32"> Lịch Sử Mua Hàng</h2>
+                <div id="ordersList" class="orders-list"></div>
+            </section>
+
+            <!-- 4. Wishlist -->
+            <section id="wishlist-tab" class="account-tab">
+                <h2><img src="heart.svg" alt="Yêu thích" width="32" height="32"> Sản Phẩm Yêu Thích (Wishlist)</h2>
+                <div id="wishlistList" class="wishlist-list"></div>
+            </section>
+
+            <!-- 5. Bảo Mật -->
+            <section id="security-tab" class="account-tab">
+                <h2><img src="user-lock.svg" alt="Khóa" width="32" height="32"> Bảo Mật Tài Khoản</h2>
+                <div class="security-card" style="max-width: 100%;">
+                    <h3><img src="user-lock.svg" alt="Khóa" width="16" height="16"> Thay Đổi Mật Khẩu</h3>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Mật Khẩu Cũ</label>
+                        <input type="password" id="oldPassword" placeholder="Nhập mật khẩu hiện tại của bạn">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Mật Khẩu Mới</label>
+                        <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới (từ 6 ký tự)">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Xác Nhận Mật Khẩu Mới</label>
+                        <input type="password" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
+                    </div>
+                    <button class="btn btn-primary" onclick="changePassword()"><img src="disk.svg" alt="Địa chỉ giao hàng" width="16" height="16"> Cập Nhật Mật Khẩu</button>
+                </div>
+            </section>
+
+            <!-- 6. Cài Đặt -->
+            <section id="settings-tab" class="account-tab">
+                <h2><img src="settings.svg" alt="Cài đặt" width="32" height="32"> Cài Đặt Hệ Thống</h2>
+                <div class="settings-card" style="max-width: 100%;">
+                    <div class="setting-item">
+                        <div class="setting-text">
+                            <h4>Thông Báo Qua Email</h4>
+                            <p>Nhận thông báo cập nhật về đơn hàng qua email</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationEmail" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-text">
+                            <h4>Thông Báo Qua SMS</h4>
+                            <p>Nhận thông báo tiến độ đơn hàng qua tin nhắn SMS</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationSms" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-text">
+                            <h4>Thông Báo Khuyến Mãi</h4>
+                            <p>Nhận thông báo về các ưu đãi và mã giảm giá hấp dẫn</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationPromo" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="saveSettings()"><img src="disk.svg" alt="Địa chỉ giao hàng" width="16" height="16"> Lưu Cài Đặt</button>
+                </div>
+            </section>
+
+            <!-- Thông báo chung -->
+            <div id="accountMessage" class="message" style="display: none;"></div>
+        </main>
+    </div>
+
+    <script src="js/account.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
